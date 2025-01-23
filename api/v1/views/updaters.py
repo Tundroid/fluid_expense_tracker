@@ -2,7 +2,7 @@
 """ Model creator API endpoints """
 
 from flask import request, jsonify, abort
-from models.engine.db_storage import classes_commerce, classes_account
+from models.engine.db_storage import classes
 from models import storage
 from api.v1.views import app_views
 from flask_jwt_extended import jwt_required
@@ -26,7 +26,6 @@ def update_model(model=None):
         abort(400, description="Model is required")
 
     try:
-        classes = classes_commerce | classes_account
         data = request.get_json(silent=True)
         if not data:
             abort(400, description="Valid JSON data required")
