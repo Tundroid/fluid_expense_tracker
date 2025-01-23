@@ -3,8 +3,7 @@
 
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 import models
 from marshmallow import Schema, fields
 from datetime import datetime
@@ -40,18 +39,6 @@ class User(BaseModel, Base):
                            doc="Timestamp when the user was created")
         UpdatedAt = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow,
                            doc="Timestamp when the user was last updated")
-
-        # Establish relationships
-        budgets = relationship('Budget', backref='user',
-                                doc="Budget relationship")
-        expenses = relationship('Expense', backref='user',
-                                 doc="Expense relationship")
-        incomes = relationship('Income', backref='user',
-                                doc="Income relationship")
-        saving_goals = relationship('SavingGoal', backref='user',
-                                     doc="Saving goal relationship")
-        savings = relationship('Saving', backref='user',
-                               doc="Saving relationship")
 
 
     def __init__(self, *args, **kwargs):

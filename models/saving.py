@@ -3,7 +3,7 @@
 
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, Integer, ForeignKey, Date, Text, TIMESTAMP
+from sqlalchemy import Column, Integer, ForeignKey, Date, Time, Text, TIMESTAMP
 from sqlalchemy.orm import relationship
 import models
 from marshmallow import Schema, fields
@@ -18,12 +18,13 @@ class Saving(BaseModel, Base):
 
     Attributes:
         SavingID (int): Unique saving ID.
-        UserID (int): User ID (FK: User.UserID).
-        SavingGoalID (int): Saving goal ID (FK: SavingGoal.SavingGoalID).
         Amount (int): Saving amount.
-        Date (date): Saving date.
-        Location (str): Saving location.
-        Description (str): Saving description.
+        SavingDate (date): Saving date.
+        SavingTime (Time): Saving time.
+        SavingLocation (str): Saving location.
+        SavingDescription (str): Saving description.
+        SavingGoalID (int): Saving goal ID (FK: SavingGoal.SavingGoalID).
+        UserID (int): User ID (FK: User.UserID).
         CreatedAt (datetime): Timestamp when the saving was created.
         UpdatedAt (datetime): Timestamp when the saving was last updated.
     """
@@ -33,18 +34,20 @@ class Saving(BaseModel, Base):
 
         SavingID = Column(Integer, primary_key=True, autoincrement=True,
                     doc="Unique saving ID")
-        UserID = Column(Integer, ForeignKey('User.UserID'), nullable=False,
-                      doc="User ID")
-        SavingGoalID = Column(Integer, ForeignKey('SavingGoal.SavingGoalID'),
-                               doc="Saving goal ID")
         Amount = Column(Integer, nullable=False,
                           doc="Saving amount")
-        Date = Column(Date, nullable=False,
+        SavingDate = Column(Date, nullable=False,
                       doc="Saving date")
-        Location = Column(Text,
+        SavingTime = Column(Time, nullable=False,
+                       doc="Saving time")
+        SavingLocation = Column(Text,
                            doc="Saving location")
-        Description = Column(Text,
+        SavingDescription = Column(Text,
                               doc="Saving description")
+        SavingGoalID = Column(Integer, ForeignKey('fet_db.SavingGoal.SavingGoalID'),
+                               doc="Saving goal ID")
+        UserID = Column(Integer, ForeignKey('fet_db.User.UserID'), nullable=False,
+                      doc="User ID")
         CreatedAt = Column(TIMESTAMP, default=datetime.utcnow,
                            doc="Timestamp when the saving was created")
         UpdatedAt = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow,
@@ -74,21 +77,23 @@ class SavingSchema(Schema):
 
     Attributes:
         SavingID (int): Unique saving ID.
-        UserID (int): User ID.
-        SavingGoalID (int): Saving goal ID.
         Amount (int): Saving amount.
-        Date (date): Saving date.
-        Location (str): Saving location.
-        Description (str): Saving description.
+        SavingDate (date): Saving date.
+        SavingTime (time): Saving time.
+        SavingLocation (str): Saving location.
+        SavingDescription (str): Saving description.
+        SavingGoalID (int): Saving goal ID.
+        UserID (int): User ID.
         CreatedAt (datetime): Timestamp when the saving was created.
         UpdatedAt (datetime): Timestamp when the saving was last updated.
     """
     SavingID = fields.Int(required=False, doc="Unique saving ID")
-    UserID = fields.Int(required=True, doc="User ID")
-    SavingGoalID = fields.Int(required=False, doc="Saving goal ID")
     Amount = fields.Int(required=True, doc="Saving amount")
-    Date = fields.Date(required=True, doc="Saving date")
-    Location = fields.Str(required=False, doc="Saving location")
-    Description = fields.Str(required=False, doc="Saving description")
+    SavingDate = fields.Date(required=True, doc="Saving date")
+    SavingTime = fields.Time(required=True, doc="Saving time")
+    SavingLocation = fields.Str(required=False, doc="Saving location")
+    SavingDescription = fields.Str(required=False, doc="Saving description")
+    SavingGoalID = fields.Int(required=False, doc="Saving goal ID")
+    UserID = fields.Int(required=True, doc="User ID")
     CreatedAt = fields.DateTime(required=False, doc="Timestamp when the saving was created")
     UpdatedAt = fields.DateTime(required=False, doc="Timestamp when the saving was last updated")
