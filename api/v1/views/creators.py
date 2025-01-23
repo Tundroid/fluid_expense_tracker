@@ -18,7 +18,7 @@ from werkzeug.exceptions import BadRequest
 # Local imports
 from api.v1.views import app_views
 from models import storage
-from models.engine.db_storage import classes_commerce, classes_account
+from models.engine.db_storage import classes
 
 
 @app_views.route("/create", methods=['POST'], strict_slashes=False)
@@ -48,7 +48,6 @@ def create_model(model=None):
         if not request_data:
             raise BadRequest()
 
-        classes = classes_commerce | classes_account
         db_model = classes[model]
         
         schema_module = importlib.import_module(f"models.{model}")
