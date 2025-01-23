@@ -83,11 +83,11 @@ class DBStorage:
         # TODO try to create all db with the following
         sess_factory = sessionmaker(bind=self.__engine,
                                     expire_on_commit=False)
-        self.__sessions = scoped_session(sess_factory)
+        self.__session = scoped_session(sess_factory)
 
     def close(self):
         """call remove() method on the private session attribute"""
-        self.__sessions.remove()
+        self.__session.remove()
 
     def get(self, cls, ids):
         """
