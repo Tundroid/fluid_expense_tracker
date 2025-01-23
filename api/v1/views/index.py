@@ -5,8 +5,7 @@ from flask import jsonify
 
 from api.v1.views import app_views
 from models import storage
-from models.engine.db_storage import classes_account, classes_commerce
-
+from models.engine.db_storage import classes
 
 from flask import request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -49,7 +48,6 @@ def status():
 def stats():
     """Endpoint that retrieves the number of each objects by type"""
     stats_dict = {}
-    classes = classes_commerce | classes_account
     for cls_name, cls in classes.items():
         stats_dict[cls_name] = storage.count(cls)
     return jsonify(stats_dict)

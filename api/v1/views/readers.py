@@ -2,7 +2,7 @@
 """ Model getter API endpoints """
 
 from flask import abort, jsonify, request
-from models.engine.db_storage import classes_commerce, classes_account
+from models.engine.db_storage import classes
 from models import storage
 from api.v1.views import app_views
 from flask_jwt_extended import jwt_required
@@ -29,7 +29,6 @@ def get_model(model=None, model_id=None):
         abort(400, description={"message":  "Model is required"})
     
     try:
-        classes = classes_commerce | classes_account
         model_cls = classes[model]
         model_ids = None
         if request.data:
