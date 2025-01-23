@@ -2,7 +2,7 @@
 """ Model getter API endpoints """
 
 from flask import abort, jsonify, request
-from models.engine.db_storage import classes_commerce, classes_account
+from models.engine.db_storage import classes
 from models import storage
 from api.v1.views import app_views
 from flask_jwt_extended import jwt_required
@@ -35,8 +35,6 @@ def clean_model():
                     abort(400, description={"message":  f"Valid JSON data required"})
     
     try:
-        classes = classes_commerce | classes_account
-
         if "models" not in request_data.keys():
             abort(400, description={"message":  f"field `models` missing in JSON data"})
         
