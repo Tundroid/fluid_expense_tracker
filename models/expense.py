@@ -96,7 +96,7 @@ class ExpenseSchema(Schema):
     ExpenseID = fields.Int(required=False, doc="Unique expense ID")
     Amount = fields.Int(required=True, doc="Expense amount")
     ExpenseDate = fields.Date(required=True, doc="Expense date")
-    ExpenseTime = fields.Time(required=True, doc="Expense time")
+    ExpenseTime = fields.Time(required=False, doc="Expense time")
     Recurring = fields.Bool(required=False, doc="Whether the expense is recurring")
     ExpenseDescription = fields.Str(required=False, doc="Expense description")
     BudgetID = fields.Int(required=False, doc="Budget ID")

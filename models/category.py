@@ -3,7 +3,8 @@
 
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, Integer, String, Enum, TIMESTAMP
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum, TIMESTAMP
+from sqlalchemy.orm import relationship
 import models
 from marshmallow import Schema, fields
 from datetime import datetime
@@ -19,6 +20,7 @@ class Category(BaseModel, Base):
         CategoryID (int): Unique category ID.
         CategoryName (str): Category name.
         CategoryType (str): Category type (Expense or Income).
+        UserID (int): User ID (FK: User.UserID).
         CreatedAt (datetime): Timestamp when the category was created.
         UpdatedAt (datetime): Timestamp when the category was last updated.
     """
@@ -30,6 +32,8 @@ class Category(BaseModel, Base):
                     doc="Unique category ID")
         CategoryName = Column(String(100), nullable=False,
                           doc="Category name")
+        UserID = Column(Integer, ForeignKey('fet_db.User.UserID'), nullable=False,
+                      doc="User ID")
         CategoryType = Column(Enum('Budget', 'Expense', 'Income', 'Saving'), nullable=False,
                       doc="Category type (Expense or Income)")
         CreatedAt = Column(TIMESTAMP, default=datetime.utcnow,
@@ -37,6 +41,10 @@ class Category(BaseModel, Base):
         UpdatedAt = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow,
                            doc="Timestamp when the category was last updated")
 
+        # Establish relationships
+        user = relationship('User', backref='categories',
+                            doc="User relationship")
+        
 
     def __init__(self, *args, **kwargs):
         """
@@ -55,13 +63,15 @@ class CategorySchema(Schema):
 
     Attributes:
         CategoryID (int): Unique category ID.
-        Name (str): Category name.
-        Type (str): Category type (Expense or Income).
+        CategoryName (str): Category name.
+        CategoryType (str): Category type (Expense or Income).
+        UserID (int): User ID.
         CreatedAt (datetime): Timestamp when the category was created.
         UpdatedAt (datetime): Timestamp when the category was last updated.
     """
     CategoryID = fields.Int(required=False, doc="Unique category ID")
-    Name = fields.Str(required=True, doc="Category name")
-    Type = fields.Str(required=True, doc="Category type (Expense or Income)")
+    CategoryName = fields.Str(required=True, doc="Category name")
+    CategoryType = fields.Str(required=True, doc="Category type (Expense or Income)")
+    UserID = fields.Int(required=True, doc="User ID")
     CreatedAt = fields.DateTime(required=False, doc="Timestamp when the category was created")
     UpdatedAt = fields.DateTime(required=False, doc="Timestamp when the category was last updated")

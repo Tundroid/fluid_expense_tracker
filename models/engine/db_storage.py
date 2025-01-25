@@ -4,7 +4,6 @@ Contains the class DBStorage
 """
 
 import models
-from models.base_model import Database
 from models.budget import Budget
 from models.category import Category
 from models.expense import Expense
@@ -127,3 +126,11 @@ class DBStorage:
         self.__session.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
 
         self.save()
+    @property
+    def session(self):
+        """
+        Getter for the private __session attribute.
+        Provides controlled access to the database session.
+        """
+        return self.__session
+

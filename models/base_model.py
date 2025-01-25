@@ -14,11 +14,6 @@ else:
     Base = object
 
 
-class Database(enum.Enum):
-    ACCOUNT = 0
-    COMMERCE = 1
-
-
 class BaseModel:
     """The BaseModel class from which future classes will be derived"""
 
@@ -47,8 +42,8 @@ class BaseModel:
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
         if save_fs is None:
-            if "password" in new_dict:
-                del new_dict["password"]
+            if "UserPassword" in new_dict:
+                del new_dict["UserPassword"]
         return new_dict
 
     def delete(self):

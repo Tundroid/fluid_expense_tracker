@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """ Model creator API endpoints """
 
+
+import re
+
 from flask import request, jsonify, abort
 from models.engine.db_storage import classes
 from models import storage
@@ -40,6 +43,8 @@ def update_model(model=None):
         
         return jsonify(db_model.to_dict()), 200
     except (KeyError, ValueError) as e:
-        return  abort(404, description=f"Model `{model}`")
+        abort(404, description={"message":  f"Model `{model}`"})
     except (IntegrityError) as e:
-        return  abort(409, description=f"Resource already exists in Model `{model}`")
+        match = re.search(r"Duplicate entry '(.+?)'", str(e.orig))
+        duplicate_value = match.group(1) if match else "Unknown"
+        abort(409, description={"message": f"Resource(s) already exists in Model `{model}`, check value(s) `{duplicate_value}`"})

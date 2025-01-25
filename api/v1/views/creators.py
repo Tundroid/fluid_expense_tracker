@@ -23,7 +23,7 @@ from models.engine.db_storage import classes
 
 @app_views.route("/create", methods=['POST'], strict_slashes=False)
 @app_views.route("/create/<model>", methods=['POST'], strict_slashes=False)
-@jwt_required()
+# @jwt_required()
 def create_model(model=None):
     """
     Create a new model instance.
@@ -62,7 +62,7 @@ def create_model(model=None):
             obj = db_model(**data)
             storage.new(obj)
         storage.save()
-        return '', 201
+        return {}, 201
     except KeyError:
         abort(404, description={"message": f"Model `{model}`"})
     except IntegrityError as e:

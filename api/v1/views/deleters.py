@@ -9,9 +9,9 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import inspect
 
-@app_views.route("/delete", methods=['DELETE'], strict_slashes=False)
-@app_views.route("/delete/<model>", methods=['DELETE'], strict_slashes=False)
-@jwt_required()
+@app_views.route("/delete", methods=['POST'], strict_slashes=False)
+@app_views.route("/delete/<model>", methods=['POST'], strict_slashes=False)
+# @jwt_required()
 def delete_model(model=None):
     """Delete a new model instance.
 
@@ -27,16 +27,20 @@ def delete_model(model=None):
 
     try:
         data = request.get_json(silent=True)
+        print("data:", request.data)
+        print("headers:", request.headers)
         if not data:
+            print("No data")
             abort(400, description="Valid JSON data required")
 
         data = data["ids"]
         for piece in data:
-            db_model = storage.get(classes[model], piece)
+            print({inspect(classes[model]).primary_key[0].name: piece})
+            db_model = storage.get(classes[model], {inspect(classes[model]).primary_key[0].name: piece})
             storage.delete(db_model)
         storage.save()
         
-        return jsonify(db_model.to_dict()), 200
+        return '', 200
     except (KeyError, ValueError) as e:
         return  abort(404, description=f"Model `{model}`")
     except (IntegrityError) as e:
