@@ -2,7 +2,6 @@
 """ Model getter API endpoints """
 
 from flask import abort, jsonify, request
-from models.expense import Expense
 from models.category import Category
 from models import storage
 from api.v1.views import app_views
@@ -11,9 +10,9 @@ from werkzeug.exceptions import BadRequest
 from marshmallow import Schema, fields, validates, ValidationError
 
 
-@app_views.route("/get_expenses", methods=['GET'], strict_slashes=False)
+@app_views.route("/get_categories", methods=['GET'], strict_slashes=False)
 # @jwt_required()
-def get_expenses():
+def get_categories():
     """Retrieve model or model instance details.
 
     Args:
@@ -26,41 +25,35 @@ def get_expenses():
     
     try:
         filters = request.args
-        ExpenseFilterSchema().load(filters)
+        CategoryFilterSchema().load(filters)
         
         query = storage.session.query(
-                Expense.ExpenseID,
-                Expense.Amount,
-                Expense.ExpenseDate,
-                Expense.ExpenseTime,
-                Expense.Recurring,
-                Expense.ExpenseDescription,
-                Category.CategoryName
-            ).join(Category, Expense.CategoryID == Category.CategoryID)
+                Category.CategoryID,
+                Category.CategoryName,
+                Category.CategoryType
+            )
 
         if "UserID" in filters:
-            query = query.filter(Expense.UserID == filters["UserID"])
+            query = query.filter(Category.UserID == filters["UserID"])
+            # query = query.filter(Category.UserID.in_([1, filters["UserID"]]))
+
 
         results = query.all()
 
-        schema = ExpenseCategorySchema(many=True)
+        schema = CategoryCategorySchema(many=True)
         serialized_data = schema.dump(results)
         return jsonify(serialized_data)
     except ValidationError as e:
         abort(400, description={"message":  e.messages})
 
 
-class ExpenseCategorySchema(Schema):
-    ExpenseID = fields.Integer()
-    Amount = fields.Integer()
-    ExpenseDate = fields.Date()
-    ExpenseTime = fields.Time()
-    Recurring = fields.Boolean()
-    ExpenseDescription = fields.String()
+class CategoryCategorySchema(Schema):
+    CategoryID = fields.Integer()
     CategoryName = fields.String()
+    CategoryType = fields.String()
 
 
-class ExpenseFilterSchema(Schema):
+class CategoryFilterSchema(Schema):
     UserID = fields.Integer(required=False)
 
     @validates('UserID')
