@@ -5,6 +5,7 @@
 # Standard library imports
 import importlib
 import re
+import bcrypt
 
 
 # Third-party imports
@@ -59,6 +60,8 @@ def create_model(model=None):
 
         data_set = [request_data] if type(request_data) is dict else request_data
         for data in data_set:
+            if model == "user":
+                data["UserPassword"] = bcrypt.hashpw(data["UserPassword"].encode('utf-8'), bcrypt.gensalt())
             obj = db_model(**data)
             storage.new(obj)
         storage.save()

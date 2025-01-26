@@ -6,3 +6,4 @@ marshmallow
 mysqlclient
 flask_jwt_extended
 requests
+bcrypt

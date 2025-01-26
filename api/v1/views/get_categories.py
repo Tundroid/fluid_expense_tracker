@@ -34,7 +34,6 @@ def get_categories():
             )
 
         if "UserID" in filters:
-            # query = query.filter(Category.UserID == filters["UserID"])
             query = query.filter(Category.UserID.in_([1, filters["UserID"]]))
 
 
