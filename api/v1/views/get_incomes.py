@@ -2,7 +2,7 @@
 """ Model getter API endpoints """
 
 from flask import abort, jsonify, request
-from models.expense import Expense
+from models.income import Income
 from models.category import Category
 from models import storage
 from api.v1.views import app_views
@@ -11,9 +11,9 @@ from werkzeug.exceptions import BadRequest
 from marshmallow import Schema, fields, validates, ValidationError
 
 
-@app_views.route("/get_list_expense", methods=['GET'], strict_slashes=False)
+@app_views.route("/get_list_income", methods=['GET'], strict_slashes=False)
 # @jwt_required()
-def get_expenses():
+def get_incomes():
     """Retrieve model or model instance details.
 
     Args:
@@ -26,41 +26,41 @@ def get_expenses():
     
     try:
         filters = request.args
-        ExpenseFilterSchema().load(filters)
+        IncomeFilterSchema().load(filters)
         
         query = storage.session.query(
-                Expense.ExpenseID,
-                Expense.Amount,
-                Expense.ExpenseDate,
-                Expense.ExpenseTime,
-                Expense.Recurring,
-                Expense.ExpenseDescription,
+                Income.IncomeID,
+                Income.Amount,
+                Income.IncomeDate,
+                Income.IncomeTime,
+                # Income.Recurring,
+                Income.IncomeDescription,
                 Category.CategoryName
-            ).join(Category, Expense.CategoryID == Category.CategoryID)
+            ).join(Category, Income.CategoryID == Category.CategoryID)
 
         if "UserID" in filters:
-            query = query.filter(Expense.UserID == filters["UserID"])
+            query = query.filter(Income.UserID == filters["UserID"])
 
         results = query.all()
 
-        schema = ExpenseCategorySchema(many=True)
+        schema = IncomeCategorySchema(many=True)
         serialized_data = schema.dump(results)
         return jsonify(serialized_data)
     except ValidationError as e:
         abort(400, description={"message":  e.messages})
 
 
-class ExpenseCategorySchema(Schema):
-    ExpenseID = fields.Integer()
+class IncomeCategorySchema(Schema):
+    IncomeID = fields.Integer()
     Amount = fields.Integer()
-    ExpenseDate = fields.Date()
-    ExpenseTime = fields.Time()
-    Recurring = fields.Boolean()
-    ExpenseDescription = fields.String()
+    IncomeDate = fields.Date()
+    IncomeTime = fields.Time()
+    # Recurring = fields.Boolean()
+    IncomeDescription = fields.String()
     CategoryName = fields.String()
 
 
-class ExpenseFilterSchema(Schema):
+class IncomeFilterSchema(Schema):
     UserID = fields.Integer(required=False)
 
     @validates('UserID')

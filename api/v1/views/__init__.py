@@ -10,6 +10,10 @@ app_views = Blueprint("app_views", __name__, url_prefix="/api/v1")
 def handle_bad_request(error):
     return handler_helper(error), 400
 
+@app_views.errorhandler(401)
+def handle_bad_request(error):
+    return handler_helper(error), 401
+
 @app_views.errorhandler(404)
 def handle_not_found(error):
     return handler_helper(error), 404
@@ -34,5 +38,6 @@ from api.v1.views.updaters import *
 from api.v1.views.deleters import *
 from api.v1.views.utils import *
 from api.v1.views.get_expenses import *
+from api.v1.views.get_incomes import *
 from api.v1.views.get_categories import *
 from api.v1.views.login_user import *

@@ -10,7 +10,7 @@ from werkzeug.exceptions import BadRequest
 from marshmallow import Schema, fields, validates, ValidationError
 
 
-@app_views.route("/get_categories", methods=['GET'], strict_slashes=False)
+@app_views.route("/get_list_category", methods=['GET'], strict_slashes=False)
 # @jwt_required()
 def get_categories():
     """Retrieve model or model instance details.

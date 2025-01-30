@@ -3,17 +3,12 @@
 
 
 # Standard library imports
-import importlib
-import re
 import base64
 import bcrypt
 
 # Third-party imports
 from flask import request, abort, jsonify
 from flask_jwt_extended import jwt_required
-from marshmallow import ValidationError
-from sqlalchemy.exc import IntegrityError
-from werkzeug.exceptions import BadRequest
 
 
 # Local imports
@@ -40,11 +35,13 @@ def login_user():
         404: Model not found
         409: Resource already exists
     """
+
     # Get the Authorization header
-    auth_header = request.headers.get('Authorization')
+    auth_header = request.headers.get('X-User-Credentials')
 
     if not auth_header:
-        abort(401, description={"message": "Authorization header is missing!"})
+        return abort(401, description={"message": "Authorization header is missing!"})
+
 
     # Ensure the header starts with 'Basic'
     if not auth_header.startswith('Basic '):
@@ -67,7 +64,7 @@ def login_user():
     if not user:
         abort(401, description={"message": "User not found!"})
     
-    if bcrypt.checkpw(password.encode('utf-8'), user.UserPassword.encode('utf-8')):
+    if not bcrypt.checkpw(password.encode('utf-8'), user.UserPassword.encode('utf-8')):
         abort(401, description={"message": "Password incorrect!"})
     
     return jsonify(user.to_dict())
