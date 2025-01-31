@@ -58,7 +58,7 @@ def login_user():
         abort(400, description={"message": "Failed to decode credentials!"})
 
     # Here you can now use the `username` and `password` to validate the user
-    # For example:
+    # For example:C
     user = storage.session.query(User).filter_by(Email=username).first()
 
     if not user:

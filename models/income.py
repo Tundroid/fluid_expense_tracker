@@ -86,7 +86,7 @@ class IncomeSchema(Schema):
     IncomeID = fields.Int(required=False, doc="Unique income ID")
     Amount = fields.Int(required=True, doc="Income amount")
     IncomeDate = fields.Date(required=True, doc="Income date")
-    IncomeTime = fields.Time(required=True, doc="Income time")
+    IncomeTime = fields.Time(required=False, doc="Income time")
     IncomeDescription = fields.Str(required=False, doc="Income description")
     CategoryID = fields.Int(required=True, doc="Category ID")
     UserID = fields.Int(required=True, doc="User ID")
